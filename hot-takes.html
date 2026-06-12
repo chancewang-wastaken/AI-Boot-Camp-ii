@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hot Takes Wall</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0a0a;
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 640px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #fff;
+        }
+
+        .form-card {
+            background: #161616;
+            border: 1px solid #2a2a2a;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .form-row input[type="text"] {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            background: #0f0f0f;
+            border: 1px solid #333;
+            border-radius: 8px;
+            color: #e0e0e0;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .form-row input[type="text"]:focus {
+            border-color: #555;
+        }
+
+        .form-row input[type="text"]::placeholder {
+            color: #666;
+        }
+
+        .tag-input {
+            max-width: 140px;
+        }
+
+        .char-count {
+            text-align: right;
+            font-size: 0.8rem;
+            color: #555;
+            margin-bottom: 0.75rem;
+        }
+
+        .char-count.warn {
+            color: #e85d04;
+        }
+
+        button.submit-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background: #fff;
+            color: #0a0a0a;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        button.submit-btn:hover {
+            opacity: 0.85;
+        }
+
+        button.submit-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .takes-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .take-card {
+            background: #161616;
+            border: 1px solid #2a2a2a;
+            border-radius: 12px;
+            padding: 1.25rem;
+            transition: border-color 0.2s;
+        }
+
+        .take-card:hover {
+            border-color: #3a3a3a;
+        }
+
+        .take-tag {
+            display: inline-block;
+            background: #1e1e1e;
+            border: 1px solid #333;
+            border-radius: 20px;
+            padding: 0.2rem 0.6rem;
+            font-size: 0.75rem;
+            color: #888;
+            margin-bottom: 0.75rem;
+            text-transform: lowercase;
+        }
+
+        .take-text {
+            font-size: 1.1rem;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+            color: #f0f0f0;
+        }
+
+        .reactions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .reaction-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.4rem 0.75rem;
+            background: #1e1e1e;
+            border: 1px solid #2a2a2a;
+            border-radius: 20px;
+            color: #aaa;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: background 0.15s, border-color 0.15s;
+            user-select: none;
+        }
+
+        .reaction-btn:hover {
+            background: #252525;
+            border-color: #444;
+        }
+
+        .reaction-btn.active-agree {
+            background: #0d2818;
+            border-color: #1a5c2e;
+            color: #4ade80;
+        }
+
+        .reaction-btn.active-disagree {
+            background: #2d1215;
+            border-color: #5c1a1f;
+            color: #f87171;
+        }
+
+        .reaction-btn.active-spicy {
+            background: #2d1f0e;
+            border-color: #5c3a10;
+            color: #fb923c;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: #555;
+            padding: 3rem 1rem;
+            font-size: 1rem;
+        }
+
+        .take-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .take-time {
+            font-size: 0.75rem;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Hot Takes Wall</h1>
+
+        <div class="form-card">
+            <div class="form-row">
+                <input type="text" id="take-input" placeholder="Drop your hot take..." maxlength="120">
+                <input type="text" id="tag-input" class="tag-input" placeholder="#topic" maxlength="20">
+            </div>
+            <div class="char-count" id="char-count">0 / 120</div>
+            <button class="submit-btn" id="submit-btn" disabled>Post Take</button>
+        </div>
+
+        <div class="takes-list" id="takes-list">
+            <div class="empty-state">No takes yet. Be the first to drop one.</div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+        const SUPABASE_URL = 'https://ammfjouygcxejmfcqkvg.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFtbWZqb3V5Z2N4ZWptZmNxa3ZnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEyOTE0ODMsImV4cCI6MjA5Njg2NzQ4M30.KSVB1XivUHWk581sSNxbllEmSCo4UPTZDEmkOUCSqow';
+        const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        const takeInput = document.getElementById('take-input');
+        const tagInput = document.getElementById('tag-input');
+        const charCount = document.getElementById('char-count');
+        const submitBtn = document.getElementById('submit-btn');
+        const takesList = document.getElementById('takes-list');
+
+        let takes = [];
+        let userReactions = JSON.parse(localStorage.getItem('hot-takes-reactions') || '{}');
+
+        function saveReactions() {
+            localStorage.setItem('hot-takes-reactions', JSON.stringify(userReactions));
+        }
+
+        function timeAgo(ts) {
+            const diff = Date.now() - new Date(ts).getTime();
+            const mins = Math.floor(diff / 60000);
+            if (mins < 1) return 'just now';
+            if (mins < 60) return mins + 'm ago';
+            const hrs = Math.floor(mins / 60);
+            if (hrs < 24) return hrs + 'h ago';
+            const days = Math.floor(hrs / 24);
+            return days + 'd ago';
+        }
+
+        function renderTakes() {
+            if (takes.length === 0) {
+                takesList.innerHTML = '<div class="empty-state">No takes yet. Be the first to drop one.</div>';
+                return;
+            }
+
+            takesList.innerHTML = takes.map((t) => {
+                const ur = userReactions[t.id] || {};
+
+                return `
+                <div class="take-card">
+                    <div class="take-meta">
+                        <span class="take-tag">#${escapeHtml(t.tag)}</span>
+                        <span class="take-time">${timeAgo(t.created_at)}</span>
+                    </div>
+                    <div class="take-text">${escapeHtml(t.text)}</div>
+                    <div class="reactions">
+                        <button class="reaction-btn ${ur.agree ? 'active-agree' : ''}" onclick="react('${t.id}', 'agree')">
+                            <span>&#128077;</span> <span>${t.agree}</span>
+                        </button>
+                        <button class="reaction-btn ${ur.disagree ? 'active-disagree' : ''}" onclick="react('${t.id}', 'disagree')">
+                            <span>&#128078;</span> <span>${t.disagree}</span>
+                        </button>
+                        <button class="reaction-btn ${ur.spicy ? 'active-spicy' : ''}" onclick="react('${t.id}', 'spicy')">
+                            <span>🌶️</span> <span>${t.spicy}</span>
+                        </button>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        function escapeHtml(str) {
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        async function loadTakes() {
+            const { data, error } = await supabase
+                .from('takes')
+                .select('*')
+                .order('created_at', { ascending: false });
+
+            if (error) {
+                console.error('Failed to load takes:', error);
+                return;
+            }
+            takes = data;
+            renderTakes();
+        }
+
+        window.react = react;
+        async function react(id, type) {
+            if (!userReactions[id]) userReactions[id] = {};
+
+            const take = takes.find(t => t.id === id);
+            if (!take) return;
+
+            let delta;
+            if (userReactions[id][type]) {
+                userReactions[id][type] = false;
+                delta = -1;
+            } else {
+                userReactions[id][type] = true;
+                delta = 1;
+            }
+
+            take[type] += delta;
+            saveReactions();
+            renderTakes();
+
+            await supabase
+                .from('takes')
+                .update({ [type]: take[type] })
+                .eq('id', id);
+        }
+
+        takeInput.addEventListener('input', () => {
+            const len = takeInput.value.length;
+            charCount.textContent = len + ' / 120';
+            charCount.className = 'char-count' + (len > 100 ? ' warn' : '');
+            submitBtn.disabled = len === 0;
+        });
+
+        submitBtn.addEventListener('click', addTake);
+        takeInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && takeInput.value.trim()) addTake();
+        });
+
+        async function addTake() {
+            const text = takeInput.value.trim();
+            if (!text) return;
+
+            let tag = tagInput.value.trim().replace(/^#/, '').replace(/[^a-zA-Z0-9]/g, '');
+            if (!tag) tag = 'general';
+
+            submitBtn.disabled = true;
+
+            const { error } = await supabase
+                .from('takes')
+                .insert({ text, tag });
+
+            if (error) {
+                console.error('Failed to post take:', error);
+                submitBtn.disabled = false;
+                return;
+            }
+
+            takeInput.value = '';
+            tagInput.value = '';
+            charCount.textContent = '0 / 120';
+            charCount.className = 'char-count';
+            await loadTakes();
+        }
+
+        loadTakes();
+    </script>
+</body>
+</html>
