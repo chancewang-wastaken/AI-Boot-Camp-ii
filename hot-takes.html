@@ -75,62 +75,25 @@
             75% { transform: translate(30px, 40px) scale(1.02); }
         }
 
-        .city-skyline {
+        .city-gif {
             position: fixed;
             bottom: 0;
             left: 0;
             width: 100%;
-            height: 220px;
+            height: 280px;
             z-index: -1;
             pointer-events: none;
+            overflow: hidden;
+            mask-image: linear-gradient(to bottom, transparent 0%, black 40%);
+            -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 40%);
         }
 
-        .city-skyline svg {
+        .city-gif img {
             width: 100%;
             height: 100%;
-            display: block;
-        }
-
-        .window {
-            animation: twinkle 3s infinite ease-in-out;
-        }
-
-        .window:nth-child(odd) { animation-delay: -1.5s; }
-        .window:nth-child(3n) { animation-delay: -0.8s; }
-        .window:nth-child(4n) { animation-delay: -2.2s; }
-        .window:nth-child(5n) { animation-duration: 4s; }
-        .window:nth-child(7n) { animation-duration: 2.5s; }
-
-        @keyframes twinkle {
-            0%, 100% { opacity: 0.2; }
-            50% { opacity: 0.9; }
-        }
-
-        .shooting-star {
-            position: fixed;
-            top: 15%;
-            left: -5%;
-            width: 80px;
-            height: 2px;
-            background: linear-gradient(to right, transparent, #fff);
-            border-radius: 2px;
-            opacity: 0;
-            z-index: -1;
-            animation: shoot 6s infinite ease-in;
-            animation-delay: 3s;
-        }
-
-        .shooting-star:nth-child(2) {
-            top: 8%;
-            animation-delay: 8s;
-            animation-duration: 5s;
-        }
-
-        @keyframes shoot {
-            0% { transform: translateX(0) translateY(0); opacity: 0; }
-            5% { opacity: 1; }
-            20% { transform: translateX(calc(100vw + 100px)) translateY(60px); opacity: 0; }
-            100% { opacity: 0; }
+            object-fit: cover;
+            object-position: center bottom;
+            opacity: 0.45;
         }
 
         .container {
@@ -321,121 +284,8 @@
         <div class="orb"></div>
         <div class="orb"></div>
     </div>
-    <div class="shooting-star"></div>
-    <div class="shooting-star"></div>
-    <div class="city-skyline">
-        <svg viewBox="0 0 1200 220" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
-            <rect x="0" y="0" width="1200" height="220" fill="transparent"/>
-            <!-- Buildings -->
-            <rect x="20" y="100" width="60" height="120" fill="#111"/>
-            <rect x="90" y="60" width="40" height="160" fill="#0d0d0d"/>
-            <rect x="140" y="80" width="55" height="140" fill="#131313"/>
-            <rect x="210" y="40" width="35" height="180" fill="#0f0f0f"/>
-            <rect x="255" y="90" width="50" height="130" fill="#121212"/>
-            <rect x="320" y="50" width="45" height="170" fill="#0e0e0e"/>
-            <rect x="375" y="70" width="60" height="150" fill="#111"/>
-            <rect x="445" y="30" width="30" height="190" fill="#0d0d0d"/>
-            <rect x="485" y="85" width="55" height="135" fill="#131313"/>
-            <rect x="550" y="55" width="40" height="165" fill="#101010"/>
-            <rect x="600" y="75" width="65" height="145" fill="#0f0f0f"/>
-            <rect x="680" y="45" width="35" height="175" fill="#121212"/>
-            <rect x="725" y="90" width="50" height="130" fill="#0e0e0e"/>
-            <rect x="790" y="35" width="40" height="185" fill="#111"/>
-            <rect x="840" y="70" width="55" height="150" fill="#0d0d0d"/>
-            <rect x="910" y="55" width="45" height="165" fill="#131313"/>
-            <rect x="965" y="80" width="60" height="140" fill="#101010"/>
-            <rect x="1040" y="50" width="35" height="170" fill="#0f0f0f"/>
-            <rect x="1085" y="65" width="50" height="155" fill="#121212"/>
-            <rect x="1145" y="90" width="55" height="130" fill="#0e0e0e"/>
-            <!-- Windows -->
-            <rect class="window" x="30" y="110" width="5" height="6" fill="#f5c842"/>
-            <rect class="window" x="42" y="110" width="5" height="6" fill="#f5c842"/>
-            <rect class="window" x="55" y="110" width="5" height="6" fill="#f5c842"/>
-            <rect class="window" x="30" y="130" width="5" height="6" fill="#f5c842"/>
-            <rect class="window" x="55" y="140" width="5" height="6" fill="#f5c842"/>
-            <rect class="window" x="42" y="155" width="5" height="6" fill="#f5c842"/>
-            <rect class="window" x="100" y="70" width="4" height="5" fill="#f5c842"/>
-            <rect class="window" x="112" y="85" width="4" height="5" fill="#f5c842"/>
-            <rect class="window" x="100" y="110" width="4" height="5" fill="#f5c842"/>
-            <rect class="window" x="112" y="130" width="4" height="5" fill="#f5c842"/>
-            <rect class="window" x="100" y="155" width="4" height="5" fill="#f5c842"/>
-            <rect class="window" x="155" y="95" width="5" height="6" fill="#f5c842"/>
-            <rect class="window" x="170" y="95" width="5" height="6" fill="#f5c842"/>
-            <rect class="window" x="155" y="120" width="5" height="6" fill="#f5c842"/>
-            <rect class="window" x="170" y="140" width="5" height="6" fill="#f5c842"/>
-            <rect class="window" x="155" y="165" width="5" height="6" fill="#f5c842"/>
-            <rect class="window" x="218" y="50" width="4" height="5" fill="#f5c842"/>
-            <rect class="window" x="230" y="65" width="4" height="5" fill="#f5c842"/>
-            <rect class="window" x="218" y="90" width="4" height="5" fill="#f5c842"/>
-            <rect class="window" x="230" y="120" width="4" height="5" fill="#f5c842"/>
-            <rect class="window" x="218" y="150" width="4" height="5" fill="#f5c842"/>
-            <rect class="window" x="265" y="100" width="5" height="6" fill="#f5c842"/>
-            <rect class="window" x="280" y="115" width="5" height="6" fill="#f5c842"/>
-            <rect class="window" x="290" y="140" width="5" height="6" fill="#f5c842"/>
-            <rect class="window" x="265" y="160" width="5" height="6" fill="#f5c842"/>
-            <rect class="window" x="330" y="60" width="4" height="5" fill="#f5c842"/>
-            <rect class="window" x="345" y="80" width="4" height="5" fill="#f5c842"/>
-            <rect class="window" x="330" y="110" width="4" height="5" fill="#f5c842"/>
-            <rect class="window" x="345" y="140" width="4" height="5" fill="#f5c842"/>
-            <rect class="window" x="330" y="170" width="4" height="5" fill="#f5c842"/>
-            <rect class="window" x="390" y="85" width="5" height="6" fill="#f5c842"/>
-            <rect class="window" x="410" y="100" width="5" height="6" fill="#f5c842"/>
-            <rect class="window" x="390" y="130" width="5" height="6" fill="#f5c842"/>
-            <rect class="window" x="420" y="155" width="5" height="6" fill="#f5c842"/>
-            <rect class="window" x="453" y="40" width="4" height="5" fill="#f5c842"/>
-            <rect class="window" x="460" y="70" width="4" height="5" fill="#f5c842"/>
-            <rect class="window" x="453" y="100" width="4" height="5" fill="#f5c842"/>
-            <rect class="window" x="460" y="140" width="4" height="5" fill="#f5c842"/>
-            <rect class="window" x="453" y="170" width="4" height="5" fill="#f5c842"/>
-            <rect class="window" x="500" y="95" width="5" height="6" fill="#f5c842"/>
-            <rect class="window" x="520" y="110" width="5" height="6" fill="#f5c842"/>
-            <rect class="window" x="500" y="140" width="5" height="6" fill="#f5c842"/>
-            <rect class="window" x="520" y="165" width="5" height="6" fill="#f5c842"/>
-            <rect class="window" x="560" y="65" width="4" height="5" fill="#f5c842"/>
-            <rect class="window" x="575" y="90" width="4" height="5" fill="#f5c842"/>
-            <rect class="window" x="560" y="120" width="4" height="5" fill="#f5c842"/>
-            <rect class="window" x="575" y="155" width="4" height="5" fill="#f5c842"/>
-            <rect class="window" x="615" y="85" width="5" height="6" fill="#f5c842"/>
-            <rect class="window" x="635" y="100" width="5" height="6" fill="#f5c842"/>
-            <rect class="window" x="650" y="130" width="5" height="6" fill="#f5c842"/>
-            <rect class="window" x="615" y="155" width="5" height="6" fill="#f5c842"/>
-            <rect class="window" x="690" y="55" width="4" height="5" fill="#f5c842"/>
-            <rect class="window" x="700" y="80" width="4" height="5" fill="#f5c842"/>
-            <rect class="window" x="690" y="115" width="4" height="5" fill="#f5c842"/>
-            <rect class="window" x="700" y="150" width="4" height="5" fill="#f5c842"/>
-            <rect class="window" x="735" y="100" width="5" height="6" fill="#f5c842"/>
-            <rect class="window" x="755" y="120" width="5" height="6" fill="#f5c842"/>
-            <rect class="window" x="735" y="150" width="5" height="6" fill="#f5c842"/>
-            <rect class="window" x="800" y="45" width="4" height="5" fill="#f5c842"/>
-            <rect class="window" x="815" y="70" width="4" height="5" fill="#f5c842"/>
-            <rect class="window" x="800" y="100" width="4" height="5" fill="#f5c842"/>
-            <rect class="window" x="815" y="140" width="4" height="5" fill="#f5c842"/>
-            <rect class="window" x="800" y="170" width="4" height="5" fill="#f5c842"/>
-            <rect class="window" x="855" y="80" width="5" height="6" fill="#f5c842"/>
-            <rect class="window" x="875" y="100" width="5" height="6" fill="#f5c842"/>
-            <rect class="window" x="855" y="130" width="5" height="6" fill="#f5c842"/>
-            <rect class="window" x="875" y="160" width="5" height="6" fill="#f5c842"/>
-            <rect class="window" x="920" y="65" width="4" height="5" fill="#f5c842"/>
-            <rect class="window" x="938" y="90" width="4" height="5" fill="#f5c842"/>
-            <rect class="window" x="920" y="120" width="4" height="5" fill="#f5c842"/>
-            <rect class="window" x="938" y="150" width="4" height="5" fill="#f5c842"/>
-            <rect class="window" x="980" y="90" width="5" height="6" fill="#f5c842"/>
-            <rect class="window" x="1000" y="110" width="5" height="6" fill="#f5c842"/>
-            <rect class="window" x="980" y="140" width="5" height="6" fill="#f5c842"/>
-            <rect class="window" x="1000" y="165" width="5" height="6" fill="#f5c842"/>
-            <rect class="window" x="1050" y="60" width="4" height="5" fill="#f5c842"/>
-            <rect class="window" x="1060" y="90" width="4" height="5" fill="#f5c842"/>
-            <rect class="window" x="1050" y="130" width="4" height="5" fill="#f5c842"/>
-            <rect class="window" x="1060" y="160" width="4" height="5" fill="#f5c842"/>
-            <rect class="window" x="1095" y="75" width="5" height="6" fill="#f5c842"/>
-            <rect class="window" x="1115" y="100" width="5" height="6" fill="#f5c842"/>
-            <rect class="window" x="1095" y="135" width="5" height="6" fill="#f5c842"/>
-            <rect class="window" x="1115" y="165" width="5" height="6" fill="#f5c842"/>
-            <rect class="window" x="1155" y="100" width="5" height="6" fill="#f5c842"/>
-            <rect class="window" x="1175" y="120" width="5" height="6" fill="#f5c842"/>
-            <rect class="window" x="1155" y="150" width="5" height="6" fill="#f5c842"/>
-            <rect class="window" x="1175" y="175" width="5" height="6" fill="#f5c842"/>
-        </svg>
+    <div class="city-gif">
+        <img src="https://media0.giphy.com/media/zMKofmJMrdZZD9uOBB/giphy.gif" alt="Animated city skyline">
     </div>
     <div class="container">
         <h1>Hot Takes Wall</h1>
